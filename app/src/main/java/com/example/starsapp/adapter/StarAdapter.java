@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -30,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StarAdapter extends RecyclerView.Adapter<StarAdapter.StarViewHolder> implements Filterable {
-    private static final String TAG = "StarAdapter";
     private List<Star> stars;
     private List<Star> starsFilter;
     private Context context;
@@ -52,16 +49,15 @@ public class StarAdapter extends RecyclerView.Adapter<StarAdapter.StarViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View popup = LayoutInflater.from(context).inflate(R.layout.star_edit_item, null,
-                        false);
+                View popup = LayoutInflater.from(context).inflate(R.layout.star_edit_item, null, false);
                 final ImageView img = popup.findViewById(R.id.img);
                 final RatingBar bar = popup.findViewById(R.id.ratingBar);
                 final TextView idss = popup.findViewById(R.id.idss);
                 Bitmap bitmap =
-                        ((BitmapDrawable)((ImageView)v.findViewById(R.id.img)).getDrawable()).getBitmap();
+                        ((BitmapDrawable) ((ImageView) v.findViewById(R.id.img)).getDrawable()).getBitmap();
                 img.setImageBitmap(bitmap);
-                bar.setRating(((RatingBar)v.findViewById(R.id.stars)).getRating());
-                idss.setText(((TextView)v.findViewById(R.id.ids)).getText().toString());
+                bar.setRating(((RatingBar) v.findViewById(R.id.stars)).getRating());
+                idss.setText(((TextView) v.findViewById(R.id.ids)).getText().toString());
                 AlertDialog dialog = new AlertDialog.Builder(context)
                         .setTitle("Notez : ")
                         .setMessage("Donner une note entre 1 et 5 :")
@@ -86,7 +82,6 @@ public class StarAdapter extends RecyclerView.Adapter<StarAdapter.StarViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull StarViewHolder starViewHolder, int i) {
-        Log.d(TAG, "onBindView call ! " + i);
         Star star = starsFilter.get(i);
         Glide.with(context)
                 .asBitmap()
@@ -135,22 +130,18 @@ public class StarAdapter extends RecyclerView.Adapter<StarAdapter.StarViewHolder
 
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            Log.d(TAG, "Filtering with: " + charSequence);
             List<Star> filteredList = new ArrayList<>();
             final FilterResults results = new FilterResults();
 
             if (charSequence == null || charSequence.length() == 0) {
-                Log.d(TAG, "No filter applied, returning all stars");
                 filteredList.addAll(stars);
             } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
-                Log.d(TAG, "Filter pattern: " + filterPattern);
                 for (Star star : stars) {
                     if (star.getName().toLowerCase().startsWith(filterPattern)) {
                         filteredList.add(star);
                     }
                 }
-                Log.d(TAG, "Filtered list size: " + filteredList.size());
             }
 
             results.values = filteredList;
@@ -162,9 +153,7 @@ public class StarAdapter extends RecyclerView.Adapter<StarAdapter.StarViewHolder
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             starsFilter.clear();
             starsFilter = (List<Star>) filterResults.values;
-            Log.d(TAG, "Publishing results, new size: " + starsFilter.size());
             this.mAdapter.notifyDataSetChanged();
         }
     }
 }
-
